@@ -44,7 +44,7 @@ def configure():
 
 
 # TODO Change so key is not hardcoded
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Users/Alex/Documents/AutoMeteorTracker/web_interface/amdt-e236e-firebase-adminsdk-j0x0f-2655e83262.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Users/Alex/Documents/AMDT/image_capture/DSLR/amdt-a1b24-firebase-adminsdk-q32q3-c9217e3b84.json"
 
 # Initialize Firebase
 default_app = firebase_admin.initialize_app()
@@ -54,7 +54,7 @@ db = firestore.Client()
 
 def get_image_data():
     storage_client = storage.Client()
-    bucket = storage_client.bucket('amdt-e236e.appspot.com')
+    bucket = storage_client.bucket('amdt-a1b24.appspot.com')
 
     # List all the files in the bucket
     blobs = bucket.list_blobs()

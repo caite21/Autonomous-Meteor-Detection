@@ -13,7 +13,7 @@ import time
 warnings.filterwarnings("ignore")
 
 # Firebase Key
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "amdt-e236e-firebase-adminsdk-j0x0f-2655e83262.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Users/Alex/Documents/AMDT/image_capture/DSLR/amdt-a1b24-firebase-adminsdk-q32q3-c9217e3b84.json"
 
 # Initialize Firebase
 default_app = firebase_admin.initialize_app()
@@ -23,7 +23,7 @@ db = firestore.Client()
 
 def upload_image(filename, local_image_path):
     storage_client = storage.Client()
-    bucket = storage_client.bucket('amdt-e236e.appspot.com')
+    bucket = storage_client.bucket('amdt-a1b24.appspot.com')
     
     if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
 
@@ -55,7 +55,7 @@ def upload_image(filename, local_image_path):
 def uploadFromFolder():
     
     # Path to the directory containing images you want to upload
-    downloads_dir = "./"
+    downloads_dir = "C:/Users/Alex/Pictures/Wallpapers"
     
     # Iterate through the files and upload
     files = os.listdir(downloads_dir)
@@ -67,6 +67,10 @@ def uploadFromFolder():
 
 if __name__ == '__main__':
     
+    uploadFromFolder()
+    
+    """
     for i in range(0,50):
         uploadFromFolder()
         time.sleep(10)
+    """
