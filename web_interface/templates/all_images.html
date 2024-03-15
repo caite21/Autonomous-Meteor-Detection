@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}All Images{% endblock %}
+
+{% block content %}
+
+<h2>All Images</h2>
+<div class="form-group">
+    <label for="dateFilter">Filter by Date:</label>
+    <input type="date" class="form-control" id="dateFilter">
+</div>
+<button class="btn btn-primary mb-2" onclick="filterByDate()">Filter</button>
+<button class="btn btn-secondary mb-2" onclick="sortImagesByDate()">Sort by Date</button>
+
+<!-- Add a grid of images with dates here -->
+<div class="row mt-3" id="imagesGrid">
+    <!-- Loop through image URLs and render images dynamically -->
+    {% for image in images %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <img src="{{ image.url }}" class="card-img-top" alt="Image">
+            <div class="card-body">
+                <p class="card-text">Capture Date: {{ image.date }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

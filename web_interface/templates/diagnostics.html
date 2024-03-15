@@ -1,0 +1,20 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Diagnostics{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-4">
+
+        <h2>Diagnostics</h2>
+        <div class="form-group">
+            <label for="textBox1">Text Box 1:</label>
+            <input type="text" class="form-control" id="textBox1">
+        </div>
+        <!-- Add more text boxes -->
+        <button class="btn btn-primary" onclick="runDiagnostics()">Run Diagnostics</button>
+
+    </div>
+
+{% endblock %}

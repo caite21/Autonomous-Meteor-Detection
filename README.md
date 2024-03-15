@@ -1,1 +1,1 @@
-# AMDT
+# AutoMeteorTracker
