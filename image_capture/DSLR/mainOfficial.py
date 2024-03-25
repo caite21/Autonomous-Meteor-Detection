@@ -1,23 +1,14 @@
 from time import sleep
-#import datetime
 from datetime import datetime
-
 from sh import gphoto2 as gp
 import time
 import signal, os, subprocess
-
 import os
 from google.cloud import firestore
 import firebase_admin
 from firebase_admin import credentials
 from google.cloud import storage
-
-
 import warnings
-
-
-# Turn off all warnings
-#warnings.filterwarnings("ignore")
 
 # Firebase Key
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "amdt-a1b24-firebase-adminsdk-q32q3-c9217e3b84.json"
@@ -71,6 +62,7 @@ def uploadFromFolder():
         upload_image(file_name, file_path)
 
 
+
 # Kill the gphoto process that starts
 # whenever we turn on the camera or
 # reboot the raspberry pi
@@ -84,6 +76,8 @@ def killGphoto2Process():
             # Kill that process!
             pid = int(line.split(None,1)[0])
             os.kill(pid, signal.SIGKILL)
+
+
 
 shot_date = datetime.now().strftime("%Y-%m-%d") # This has been written to the while True loop.
 shot_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S") # This has been written to the while True loop.
@@ -103,8 +97,12 @@ triggerCommand = ["--capture-image-and-download"]
 folder_name = shot_date + picID
 save_location = "/home/amdt/Desktop/AMDT/image_capture/DSLR"
 
+
+
 def captureImages():
     gp(triggerCommand)
+
+
 
 def renameFiles(ID):
     for filename in os.listdir("."):
@@ -116,7 +114,11 @@ def renameFiles(ID):
                 os.rename(filename, (shot_time + ID + ".CR2"))
                 print("Renamed the CR2")
 
+
+
 killGphoto2Process()
+
+
 
 if __name__ == '__main__':
     os.chdir(save_location)
