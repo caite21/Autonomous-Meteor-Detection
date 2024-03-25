@@ -34,7 +34,7 @@ clearCommand = ["--folder", "/store_00020001/DCIM/100CANON", \
 triggerCommand = ["--capture-image-and-download"]
 
 folder_name = shot_date + picID
-save_location = "/home/amdt/Desktop/AutoMeteorTracker/image_capture/DSLR"
+save_location = "/home/amdt/Desktop/AMDT/image_capture/DSLR"
 
 def captureImages():
     gp(triggerCommand)
