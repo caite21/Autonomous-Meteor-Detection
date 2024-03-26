@@ -11,25 +11,25 @@ content %}
     <label for="time-range">Set Time Range:</label>
     <div class="row">
       <div class="col-md-6">
-        <label for="start-time">Turn system ON at (24h format):</label>
+        <label for="start-time">Turn system ON at:</label>
         <input
-          type="text"
+          type="time"
           class="form-control"
           id="start-time"
-          pattern="[0-9]{2}:[0-9]{2}"
-          inputmode="numeric"
-          placeholder="HH:MM"
+          placeholder="HH:MM:SS"
+          step="1"
+          pattern="\d{2}:\d{2}:\d{2}"
         />
       </div>
       <div class="col-md-6">
-        <label for="end-time">Turn system OFF at (24h format):</label>
+        <label for="end-time">Turn system OFF at:</label>
         <input
-          type="text"
+          type="time"
           class="form-control"
           id="end-time"
-          pattern="[0-9]{2}:[0-9]{2}"
-          inputmode="numeric"
-          placeholder="HH:MM"
+          placeholder="HH:MM:SS"
+          step="1"
+          pattern="\d{2}:\d{2}:\d{2}"
         />
       </div>
     </div>

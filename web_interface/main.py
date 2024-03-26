@@ -4,6 +4,7 @@ from google.cloud import firestore
 import firebase_admin
 from firebase_admin import credentials
 from google.cloud import storage
+from datetime import datetime
 
 # Flask
 app = Flask(__name__)
@@ -47,14 +48,15 @@ def configure():
     start_date, start_time, end_date, end_time = read_sys_config()
     return render_template('configure.html', start_date=start_date, start_time=start_time, end_date=end_date, end_time=end_time)
     #return render_template('configure.html')
-                           
+
+                   
 # Flask route for handling form submission
 @app.route('/update_run', methods=['POST'])
 def update_run():
     if request.method == 'POST':
         data = request.json
-        start_time = data['startTime']
-        end_time = data['endTime']
+        start_time_24h = data['startTime']
+        end_time_24h = data['endTime']        
         start_day = data['startDay']
         end_day = data['endDay']
 
@@ -63,8 +65,8 @@ def update_run():
 
         # Update Firestore document with start and end times
         doc_ref.update({
-            'StartTime': start_time,
-            'EndTime': end_time,
+            'StartTime': start_time_24h,
+            'EndTime': end_time_24h,
             'StartDate': start_day,
             'EndDate': end_day
         })
