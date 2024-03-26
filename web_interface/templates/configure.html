@@ -64,11 +64,14 @@ content %}
     var startDay = document.getElementById("start-day").value;
     var endDay = document.getElementById("end-day").value;
 
-    // Update HTML fields with user-inputted values
-    document.getElementById("start-time").value = startTime;
-    document.getElementById("end-time").value = endTime;
-    document.getElementById("start-day").value = startDay;
-    document.getElementById("end-day").value = endDay;
+    // Validation: Check if end date and time is before start date and time
+    var startDateObj = new Date(startDay + "T" + startTime);
+    var endDateObj = new Date(endDay + "T" + endTime);
+    
+    if (endDateObj < startDateObj) {
+      alert("End date and time cannot be before start date and time.");
+      return;
+    }
 
     var data = {
       startTime: startTime,
