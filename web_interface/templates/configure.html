@@ -1,115 +1,123 @@
+{% extends 'base.html' %} {% block title %}Configure{% endblock %} {% block
+content %}
 
-{% extends 'base.html' %}
+<div class="container mt-4">
+  <h2>Configure</h2>
+  <br />
+  <h3>Active Hours:</h3>
 
-{% block title %}Configure{% endblock %}
-
-{% block content %}
-
-    <div class="container mt-4">
-
-        <h2>Configure</h2>
-        <br>
-
-        <h3>Location</h3>
-        <!-- Enter Longitude -->
-        <div class="form-group">
-            <label for="longitude">Enter Longitude:</label>
-            <input type="text" class="form-control" id="longitude" placeholder="Longitude">
-        </div>
-
-        <!-- Enter Latitude -->
-        <div class="form-group">
-            <label for="latitude">Enter Latitude:</label>
-            <input type="text" class="form-control" id="latitude" placeholder="Latitude">
-        </div>
-
-        <!-- Enter Elevation -->
-        <div class="form-group">
-            <label for="elevation">Enter Elevation:</label>
-            <input type="text" class="form-control" id="elevation" placeholder="Elevation">
-        </div>
-
-        <!-- Choose a Location -->
-        <div class="form-group">
-            <label for="location">Choose a Location:</label>
-            <select class="form-control" id="location">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <!-- Add more options as needed -->
-            </select>
-        </div>
-
-        <!-- Add more text boxes -->
-        <button class="btn btn-primary" onclick="runConfiguration()">Run Configuration</button>
-
-        <br><br>
-        <h3>System</h3>
-        <!-- Enter Key -->
-        <div class="form-group">
-            <label for="key">Enter Key:</label>
-            <input type="text" class="form-control" id="key" placeholder="Key">
-        </div>
-
-        <!-- Create Username -->
-        <div class="form-group">
-            <label for="username">Create Username:</label>
-            <input type="text" class="form-control" id="username" placeholder="Username">
-        </div>
-
-        <!-- Enter Passcode -->
-        <div class="form-group">
-            <label for="passcode">Enter Passcode:</label>
-            <input type="password" class="form-control" id="passcode" placeholder="Passcode">
-        </div>
-        <button class="btn btn-primary" onclick="runLogin()">Save</button>
-        <br>
-
-        <br>
-        <h3>Run</h3>
-        <!-- Set Date and Time Range -->
-        <div class="form-group">
-            <label for="time-range">Set Time Range:</label>
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="start-time">Turn system ON at:</label>
-                    <input type="time" class="form-control" id="start-time">
-                </div>
-                <div class="col-md-6">
-                    <label for="end-time">Turn system OFF at:</label>
-                    <input type="time" class="form-control" id="end-time">
-                </div>
-            </div>
-        </div>
-
-        <!-- Set Day Range -->
-        <div class="form-group">
-            <label for="day-range">Set Day Range:</label>
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="start-day">Start Day:</label>
-                    <input type="date" class="form-control" id="start-day">
-                </div>
-                <div class="col-md-6">
-                    <label for="end-day">End Day:</label>
-                    <input type="date" class="form-control" id="end-day">
-                </div>
-            </div>
-        </div>
-
-        <!-- Only Save Meteors Toggle -->
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="only-save-meteors">
-            <label class="form-check-label" for="only-save-meteors">Only Save Images With Meteors</label>
-        </div>
-
-        <button class="btn btn-primary" onclick="updateRun()">Save</button>
-        <br>
-
-        <br>
-        <h3>Status</h3>
-        <p>Sleeping</p>
-        <br>
-        <br>
+  <!-- Set Date and Time Range -->
+  <div class="form-group">
+    <label for="time-range">Set Time Range:</label>
+    <div class="row">
+      <div class="col-md-6">
+        <label for="start-time">Turn system ON at (24h format):</label>
+        <input
+          type="text"
+          class="form-control"
+          id="start-time"
+          pattern="[0-9]{2}:[0-9]{2}"
+          inputmode="numeric"
+          placeholder="HH:MM"
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="end-time">Turn system OFF at (24h format):</label>
+        <input
+          type="text"
+          class="form-control"
+          id="end-time"
+          pattern="[0-9]{2}:[0-9]{2}"
+          inputmode="numeric"
+          placeholder="HH:MM"
+        />
+      </div>
     </div>
+  </div>
 
+  <!-- Set Day Range -->
+  <div class="form-group">
+    <label for="day-range">Set Day Range:</label>
+    <div class="row">
+      <div class="col-md-6">
+        <label for="start-day">Start Day:</label>
+        <input type="date" class="form-control" id="start-day" />
+      </div>
+      <div class="col-md-6">
+        <label for="end-day">End Day:</label>
+        <input type="date" class="form-control" id="end-day" />
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="saveConfiguration()">Save</button>
+  <br />
+  <br />
+</div>
+
+<script>
+  var isDataFetched = false;
+
+  function saveConfiguration() {
+    var startTime = document.getElementById("start-time").value;
+    var endTime = document.getElementById("end-time").value;
+    var startDay = document.getElementById("start-day").value;
+    var endDay = document.getElementById("end-day").value;
+
+    // Update HTML fields with user-inputted values
+    document.getElementById("start-time").value = startTime;
+    document.getElementById("end-time").value = endTime;
+    document.getElementById("start-day").value = startDay;
+    document.getElementById("end-day").value = endDay;
+
+    var data = {
+      startTime: startTime,
+      endTime: endTime,
+      startDay: startDay,
+      endDay: endDay,
+    };
+
+    // Send AJAX request to Flask endpoint to update Firebase
+    fetch("/update_run", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle success response if needed
+        console.log(data);
+      })
+      .catch((error) => {
+        // Handle error if needed
+        console.error("Error:", error);
+      });
+  }
+
+  // Function to populate date and time fields with current values
+  function populateDateTimeFields(start_date, start_time, end_date, end_time) {
+    document.getElementById("start-time").value = start_time;
+    document.getElementById("end-time").value = end_time;
+    document.getElementById("start-day").value = start_date;
+    document.getElementById("end-day").value = end_date;
+  }
+
+  // Fetch current date and time from the server
+  function fetchCurrentDateTime() {
+    const start_date = "{{ start_date }}";
+    const start_time = "{{ start_time }}";
+    const end_date = "{{ end_date }}";
+    const end_time = "{{ end_time }}";
+
+    // Populate the date and time fields with the current values
+    populateDateTimeFields(start_date, start_time, end_date, end_time);
+
+    isDataFetched = true;
+  }
+
+  // Call the function to fetch and populate current date and time when the page loads
+  fetchCurrentDateTime();
+</script>
 {% endblock %}
