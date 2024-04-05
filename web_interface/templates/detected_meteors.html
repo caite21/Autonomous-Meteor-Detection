@@ -10,27 +10,24 @@
     <label for="dateFilter">Filter by Date:</label>
     <input type="date" class="form-control" id="dateFilter">
 </div>
-<button class="btn btn-primary mb-2" onclick="filterByDate()">Filter</button>
-<button class="btn btn-secondary mb-2" onclick="sortImagesByDate()">Sort by Date</button>
+<button class="buttonA" onclick="filterByDate()">Filter</button>
+<button class="buttonA" onclick="sortImagesByDate()">Sort by Date</button>
 
 <!-- Add a grid of images with dates here -->
 <div class="row mt-3" id="meteorsGrid">
     <!-- Sample Image Card -->
     <div class="col-md-4 mb-3">
-        <div class="card">
+        <div class="imageCard">
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Fireball_imaged_by_the_Perenjori_DFN_station.jpg" class="card-img-top" alt="Sample Image">
             <div class="card-body">
                 <p class="card-text">Date: 2024-02-24</p>
             </div>
         </div>
-        <div class="card">
-            <img src="https://www.astropage.nl/wp-content/uploads/2020/09/ASI183-2020-09-22T03-54-00-355Z-1-scaled.jpg
-                    " class="card-img-top" alt="Sample Image">
-            <div class="card-body">
-                <p class="card-text">Date: 2024-02-24</p>
-            </div>
-        </div>
     </div>
+    <b>
+    TODO: grab images from firebase folder for detected meteors
+    </b>
 </div>
+
 
 {% endblock %}
