@@ -42,6 +42,7 @@ def upload_image(filename, local_image_path):
             "filename": filename,
             "upload_date": datetime.now().isoformat(),
             "creation_time": creation_time.isoformat(),
+            "isMeteor": isMeteor,
             # Add any other metadata you want to save
         }
         db.collection('images_metadata').document(filename).set(metadata)
@@ -112,45 +113,45 @@ def renameFiles(ID):
 
 killGphoto2Process()
 
-def picFunc():
-    print("in picFunc")
+def cameraSystem():
+    print("Running -\t Camera system initializing")
 
     shot_date = datetime.now().strftime("%Y-%m-%d")
     shot_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    timer_start = time.time()
-
-    captureImages()
-
-    timer_end = time.time()
-
-    print(timer_end - timer_start)
-    uploadFromFolder()
-    #sleep(5)
-    #renameFiles(picID)
     
-    # schedule picFunc task again
-    startSystemScheduler.add_job(picFunc)
+    timer_start = time.time()
+    captureImages()
+    timer_end = time.time()
+    print("Running -\t Camera ran for", timer_end - timer_start)
+    
+    # classify asynchronously
+    CNNScheduler.add_job(CNN)
+    
+    # schedule cameraSystem task again
+    if contCamSystemFlag:
+        camSystemScheduler.add_job(cameraSystem)
+    
+    
+def CNN():
+    print("Running -\t ML starting")
+    global isMeteor
+    isMeteor = False
+    
+    # paste ML stuff here
+    
+    # set var:
+    isMeteor = False
+    print("Running -\t ML detection result:", isMeteor)
+    
+    # upload asynchronously
+    uploadImageScheduler.add_job(uploadImage)
+    
 
-
-
-
-# DONT TOUCH ANYTHING ABOVE THIS COMMENT **********************************
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def uploadImage():
+    uploadFromFolder()
+    print("Running -\t Image uploaded")
+    
+    
 def read_sys_config():
     global start
     global end
@@ -179,50 +180,87 @@ def read_sys_config():
         hour, minute, second = map(int, end_time_str.split(':'))
         end = datetime(year, month, day, hour, minute, second)
         
-        print("start: ", start, " end: ", end)
-        
-        
+        print("Running -\t Read time:", start, "to", end)
+    
     else:
-        print("Document does not exist")
-        
+        print("Error -\t Document does not exist")
+  
+  
+def dummyCam():
+    
+    global cam_job
+    print("in cam")
+    if contCamSystemFlag:
+        cam_job = camSystemScheduler.add_job(dummyCam)
+    dum = 0
+    for i in range(100000):
+        dum += 2
+    
 
-if __name__ == '__main__':  
+if __name__ == '__main__':
     # FOR THE LOVE OF GOD DONT TOUCH THIS
     os.chdir(save_location)
+    print("Running -\t Initializing")
     
     # get start and end time from firebase once
     global start
     global end
+    global contCamSystemFlag
+    contCamSystemFlag = True
     read_sys_config()
 
     # concurrent schedulers
-    global startSystemScheduler
+    global camSystemScheduler
     global checkConfigScheduler
-    
-    startSystemScheduler = BackgroundScheduler()
+    global uploadImageScheduler
+    global CNNScheduler
+    camSystemScheduler = BackgroundScheduler()
     checkConfigScheduler = BackgroundScheduler()
-    print("here")
-    while True:
-        read_sys_config()
+    uploadImageScheduler = BackgroundScheduler()
+    CNNScheduler = BackgroundScheduler()
+    
+    print("Running -\t System started up")
+
+    try:
+        # start checking firebase every x and updates global vars
+        checkConfigScheduler.add_job(read_sys_config, 'interval', seconds=5)
+        # initialize all processes
+        checkConfigScheduler.start()
+        camSystemScheduler.start()
+        uploadImageScheduler.start()
+        CNNScheduler.start()
+        print("Running -\t Started configuration process")
+        while True:
+            # if in target and not already running, start proc
+            if datetime.now() >= start and datetime.now() < end and not contCamSystemFlag:
+                print("Running -\t Starting new system iteration")
+                contCamSystemFlag = True
+                camSystemScheduler.add_job(cameraSystem, 'date')
+            
+            # elif not in target and running
+            if (datetime.now() < start or datetime.now() >= end) and contCamSystemFlag:
+                print("Running -\t Resetting system iteration")
+                # camSystemScheduler.shutdown()\
+                # cam_job.remove()
+                contCamSystemFlag = False
+            
+            # else: do nothing
+            print("start end now:", start, end, datetime.now() )
+            
+    except (KeyboardInterrupt, SystemExit):
+        # gracefully quit
+        print("\nStopping -\t Quitting program from keyboard command")
+        if checkConfigScheduler.running:
+            checkConfigScheduler.shutdown()
+        if camSystemScheduler.running:
+            camSystemScheduler.shutdown()
+        if uploadImageScheduler.running:
+            uploadImageScheduler.shutdown()
+        if CNNScheduler.running:
+            CNNScheduler.shutdown()
         
-        # if not currently in target range, wait
-        if datetime.now() >= end or datetime.now() < start:
-            # wait for user to set new run range
-            print(".", end="")
-            if startSystemScheduler.running:
-                print("resetting")
-                startSystemScheduler.shutdown()
-                checkConfigScheduler.shutdown()
-        else:
-            if not startSystemScheduler.running:
-                print("new start")
-                # captures and uploads pictures continuously when scheduled to start
-                startSystemScheduler.add_job(picFunc, 'date')
-                startSystemScheduler.start()
-                
-                # checks firebase every minute and updates global vars
-                checkConfigScheduler.add_job(read_sys_config, 'interval', minutes=1)
-                checkConfigScheduler.start()
+             
+    
             
 
 
@@ -241,21 +279,6 @@ DO THIS:
 
 
 
-            # keeps main thread alive
-            try:
-                while True:
-                    # reset system when stop time reached or start time changed
-                    if startSystemScheduler.running and (datetime.now() >= end or datetime.now() < start):
-                        print("Resetting")
-                        startSystemScheduler.shutdown()
-                        checkConfigScheduler.shutdown()
-                        break
-                    
-            except (KeyboardInterrupt, SystemExit):
-                # Gracefully shut down the scheduler
-                print("Quitting")
-                startSystemScheduler.shutdown()
-                checkConfigScheduler.shutdown()
 
 """
 
