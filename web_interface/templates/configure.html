@@ -1,58 +1,65 @@
 {% extends 'base.html' %} {% block title %}Configure{% endblock %} {% block
 content %}
 
-<div class="container mt-4">
+<div>
   <h2>Configure</h2>
   <br />
-  <h3>Active Hours:</h3>
+  <div class="feature-box">
+    <h3>Active Hours:</h3>
 
-  <!-- Set Date and Time Range -->
-  <div class="form-group">
-    <label for="time-range">Set Time Range:</label>
-    <div class="row">
-      <div class="col-md-6">
-        <label for="start-time">Turn system ON at:</label>
-        <input
-          type="time"
-          class="form-control"
-          id="start-time"
-          placeholder="HH:MM:SS"
-          step="1"
-          pattern="\d{2}:\d{2}:\d{2}"
-        />
-      </div>
-      <div class="col-md-6">
-        <label for="end-time">Turn system OFF at:</label>
-        <input
-          type="time"
-          class="form-control"
-          id="end-time"
-          placeholder="HH:MM:SS"
-          step="1"
-          pattern="\d{2}:\d{2}:\d{2}"
-        />
+    <!-- Set Date and Time Range -->
+    <div class="form-group" >
+      <label for="time-range">Set Time Range:</label>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="start-time">Turn system ON at:</label>
+          <input
+            type="time"
+            class="form-control"
+            id="start-time"
+            placeholder="HH:MM:SS"
+            step="1"
+            pattern="\d{2}:\d{2}:\d{2}"
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="end-time">Turn system OFF at:</label>
+          <input
+            type="time"
+            class="form-control"
+            id="end-time"
+            placeholder="HH:MM:SS"
+            step="1"
+            pattern="\d{2}:\d{2}:\d{2}"
+          />
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Set Day Range -->
-  <div class="form-group">
-    <label for="day-range">Set Day Range:</label>
-    <div class="row">
-      <div class="col-md-6">
-        <label for="start-day">Start Day:</label>
-        <input type="date" class="form-control" id="start-day" />
-      </div>
-      <div class="col-md-6">
-        <label for="end-day">End Day:</label>
-        <input type="date" class="form-control" id="end-day" />
+    <!-- Set Day Range -->
+    <div class="form-group">
+      <label for="day-range">Set Day Range:</label>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="start-day">Start Day:</label>
+          <input type="date" class="form-control" id="start-day" />
+        </div>
+        <div class="col-md-6">
+          <label for="end-day">End Day:</label>
+          <input type="date" class="form-control" id="end-day" />
+        </div>
       </div>
     </div>
+
+    <div class="form-group" style="display: flex; align-items: center;">
+      <button class="buttonA" id="save-button" onclick="saveConfiguration()">Save</button>
+      <svg id="isSaved" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle text-success" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm1.97 4.97a.758.758 0 0 1 1.08 0l.727.728a.758.758 0 0 1 0 1.077L7.646 10.75a.758.758 0 0 1-1.079 0L4.646 8.977a.758.758 0 0 1 0-1.077l.728-.728a.758.758 0 0 1 1.08 0l1.221 1.22 3.096-3.096z"/>
+      </svg>
+    </div>
+    <br />
   </div>
 
-  <button class="buttonA" onclick="saveConfiguration()">Save</button>
-  <br />
-  <br />
 </div>
 
 <script>
@@ -62,6 +69,7 @@ content %}
     var startTime = document.getElementById("start-time").value;
     var endTime = document.getElementById("end-time").value;
     var startDay = document.getElementById("start-day").value;
+    var endDay = document.getElementById("end-day").value;
     var endDay = document.getElementById("end-day").value;
 
     // Validation: Check if end date and time is before start date and time
@@ -92,6 +100,11 @@ content %}
       .then((data) => {
         // Handle success response if needed
         console.log(data);
+        document.getElementById("isSaved").style.display = "block";
+        setTimeout(function() {
+          document.getElementById("isSaved").style.display = "none";
+        }, 2000);
+
       })
       .catch((error) => {
         // Handle error if needed
@@ -122,5 +135,6 @@ content %}
 
   // Call the function to fetch and populate current date and time when the page loads
   fetchCurrentDateTime();
+  document.getElementById("isSaved").style.display = "none";
 </script>
 {% endblock %}
