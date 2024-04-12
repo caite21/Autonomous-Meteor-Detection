@@ -21,23 +21,32 @@ db = firestore.Client()
 doc_ref = db.collection("sysConfig").document("HvAny5Q1B26cU8PNC1lA")
 
 global zip_this_image_data
+global image_data
+global images_per_page
+images_per_page = 6
+global f_start_date
+global f_end_date
 
 # Routes
 @app.route('/')
 def home():
     return render_template('home.html')
 
-
 @app.route('/detected_meteors')
 def detected_meteors():
+    # refresh data
+    global zip_this_image_data
+    global image_data
+    images = get_image_data()
+    image_data = images
+
     images_per_page = 6
     image_data = get_image_data()
+
     # get only images classified as meteors
     images = [i for i in image_data if i.get('isMeteor') == True]
     total_images = len(images)
     total_pages = (total_images + images_per_page - 1) // images_per_page
-
-    global zip_this_image_data
     zip_this_image_data = images
 
     # Get the current page number from the query string
@@ -50,11 +59,29 @@ def detected_meteors():
     images_on_page = images[start:end]
     return render_template('detected_meteors.html', images=images_on_page, total_pages=total_pages, current_page=page)
 
+from datetime import datetime
 
 @app.route('/all_images')
 def all_images():
-    images_per_page = 6
+    # refresh data
+    global zip_this_image_data
+    global image_data
     images = get_image_data()
+    image_data = images
+
+
+    # filter
+    start_date = datetime(2022, 1, 1)
+    end_date = datetime(2025, 1, 1)
+    try:
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        images = [image for image in images if start_date <= datetime.strptime(image['date'][0:10], "%Y-%m-%d") <= end_date]
+    except:
+        pass
+
     total_images = len(images)
     total_pages = (total_images + images_per_page - 1) // images_per_page
 
@@ -69,7 +96,8 @@ def all_images():
     end = min(start + images_per_page, total_images)
     # Get images for the current page
     images_on_page = images[start:end]
-    return render_template('all_images.html', images=images_on_page, total_pages=total_pages, current_page=page)
+    return render_template('all_images.html', images=images_on_page, total_pages=total_pages, current_page=page, filter_start=start_date, filter_end=end_date)
+
 
 
 @app.route('/live_stream')
@@ -146,8 +174,8 @@ def get_image_data():
     image_data = []
     for blob in blobs:
         # ignore background image for Home page
-        if blob.name.lower() == 'home_background.jpg':
-            continue
+        # if blob.name.lower() == 'home_background.jpg':
+        #     continue
 
         if blob.name.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
             image_url = blob.public_url
@@ -235,60 +263,3 @@ def download_images_as_zip():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-
-
-# # testing scheduling
-#
-# from datetime import datetime
-# from apscheduler.schedulers.background import BackgroundScheduler
-# import time # can delete
-#
-# # get start_date_str, end_date_str from firebase
-# # year, month, day = map(int, start_date_str.split('-'))
-# # hour, minute, second = map(int, start_time_str.split(':'))
-#
-# # Define the function you want to run
-# def my_function():
-#     print("This function is being executed at:", datetime.now())
-#     print("heyo this works")
-#     for i in range(1000000):
-#         if i%10==0:
-#             print(".", end=" ")
-#
-# def my_function2():
-#     print("this is a second function at interval!")
-#
-# # Create a scheduler instance
-# startSystemScheduler = BackgroundScheduler()
-# startSystemScheduler.add_job(my_function, 'date', run_date=datetime(2024, 3, 25, 17, 44, 00))  # Year, Month, Day, Hour, Minute, Second
-# startSystemScheduler.start()
-#
-# checkConfigScheduler = BackgroundScheduler()
-# checkConfigScheduler.add_job(my_function2, 'interval', seconds=1)  # Year, Month, Day, Hour, Minute, Second
-# checkConfigScheduler.start()
-#
-# # Define the time to stop the scheduler
-# stop_time = datetime(2024, 3, 25, 18, 0, 0)
-#
-#
-# # Keep the main thread alive
-# try:
-#     # This is to keep the script running so that the scheduler can execute the function
-#     while True:
-#         pass
-#
-#         # Check if current time has reached the stop time
-#         if datetime.now() >= stop_time:
-#             print("Stopping the scheduler at:", datetime.now())
-#             startSystemScheduler.shutdown()
-#             checkConfigScheduler.shutdown()
-#             break
-# except (KeyboardInterrupt, SystemExit):
-#     # Gracefully shut down the scheduler
-#     print("shutting down")
-#     startSystemScheduler.shutdown()
-#     checkConfigScheduler.shutdown()
-#
