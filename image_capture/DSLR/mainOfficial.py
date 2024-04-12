@@ -68,8 +68,8 @@ def is_wifi_available(ssid: str):
     return ssid in [x.split(':')[0] for x in scan_wifi()]
 
 def wait_for_wifi():
-    ssid = "SM-G903W7886"
-    password = 'pubstare'
+    ssid = "test"
+    password = 'key'
     while not is_wifi_available(ssid):
         pass
     if not is_connected_to(ssid):
