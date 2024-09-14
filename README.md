@@ -10,9 +10,9 @@ This project is an autonomous meteor detection and tracking system for hobbyist 
 ### Photo Gallery
 ![AMDT_at_sunset](https://github.com/user-attachments/assets/6e21a6a9-3eb7-4743-b232-e57f4a950184)
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/73887b21-072c-41e6-bcf4-1d52034e0a9e" alt="AMDT_daytime" width="33%"/>
-  <img src="https://github.com/user-attachments/assets/71bdb65c-1962-485c-9ab0-6220fd80b064" alt="AMDT_inside" width="33%"/>
-  <img src="https://github.com/user-attachments/assets/1d7bcac3-a2e1-487f-afd4-5ba451556596" alt="AMDT_group_and_sky" width="33%"/>
+  <img src="https://github.com/user-attachments/assets/73887b21-072c-41e6-bcf4-1d52034e0a9e" alt="AMDT_daytime" width="32%"/>
+  <img src="https://github.com/user-attachments/assets/71bdb65c-1962-485c-9ab0-6220fd80b064" alt="AMDT_inside" width="32%"/>
+  <img src="https://github.com/user-attachments/assets/1d7bcac3-a2e1-487f-afd4-5ba451556596" alt="AMDT_group_and_sky" width="32%"/>
 </p>
 
 
