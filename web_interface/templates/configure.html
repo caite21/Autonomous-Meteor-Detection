@@ -1,0 +1,226 @@
+{% extends 'base.html' %} {% block title %}Configure{% endblock %} {% block
+content %}
+
+<div>
+  <h2>Configure</h2>
+  <br />
+  <div class="feature-box">
+    <h3>Active Hours:</h3>
+
+    <!-- Set Date and Time Range -->
+    <div class="form-group" >
+      <label for="time-range">Set Time Range:</label>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="start-time">Turn system ON at:</label>
+          <input
+            type="time"
+            class="form-control"
+            id="start-time"
+            placeholder="HH:MM:SS"
+            step="1"
+            pattern="\d{2}:\d{2}:\d{2}"
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="end-time">Turn system OFF at:</label>
+          <input
+            type="time"
+            class="form-control"
+            id="end-time"
+            placeholder="HH:MM:SS"
+            step="1"
+            pattern="\d{2}:\d{2}:\d{2}"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Set Day Range -->
+    <div class="form-group">
+      <label for="day-range">Set Day Range:</label>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="start-day">Start Day:</label>
+          <input type="date" class="form-control" id="start-day" />
+        </div>
+        <div class="col-md-6">
+          <label for="end-day">End Day:</label>
+          <input type="date" class="form-control" id="end-day" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" style="display: flex; align-items: center;">
+      <button class="buttonA" style="margin-right: 4px;" id="save-button" onclick="saveConfiguration()">Save</button>
+      <svg id="isSaved" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle text-success" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm1.97 4.97a.758.758 0 0 1 1.08 0l.727.728a.758.758 0 0 1 0 1.077L7.646 10.75a.758.758 0 0 1-1.079 0L4.646 8.977a.758.758 0 0 1 0-1.077l.728-.728a.758.758 0 0 1 1.08 0l1.221 1.22 3.096-3.096z"/>
+      </svg>
+    </div>
+    <br/>
+
+    <h3>Quick Control:</h3>
+    <div class="form-group" style="display: flex; align-items: center;">
+      <button class="buttonA" style="color: #90EE90; margin-right: 4px;" onclick="quickStart()">Start</button>
+      <button class="buttonA" style="color: #FF474C;margin-right: 4px;" onclick="quickStop()">Stop</button>
+      <svg id="isStarted" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle text-success" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm1.97 4.97a.758.758 0 0 1 1.08 0l.727.728a.758.758 0 0 1 0 1.077L7.646 10.75a.758.758 0 0 1-1.079 0L4.646 8.977a.758.758 0 0 1 0-1.077l.728-.728a.758.758 0 0 1 1.08 0l1.221 1.22 3.096-3.096z"/>
+      </svg>
+      <svg id="isStopped" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle text-danger" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+      </svg>
+    </div>
+
+
+
+    <br />
+  </div>
+
+</div>
+
+<script>
+  var isDataFetched = false;
+
+  function saveConfiguration() {
+    var startTime = document.getElementById("start-time").value;
+    var endTime = document.getElementById("end-time").value;
+    var startDay = document.getElementById("start-day").value;
+    var endDay = document.getElementById("end-day").value;
+    var endDay = document.getElementById("end-day").value;
+
+    // Validation: Check if end date and time is before start date and time
+    var startDateObj = new Date(startDay + "T" + startTime);
+    var endDateObj = new Date(endDay + "T" + endTime);
+    
+    if (endDateObj < startDateObj) {
+      alert("End date and time cannot be before start date and time.");
+      return;
+    }
+
+    var data = {
+      startTime: startTime,
+      endTime: endTime,
+      startDay: startDay,
+      endDay: endDay,
+    };
+
+    // Send AJAX request to Flask endpoint to update Firebase
+    fetch("/update_run", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle success response if needed
+        console.log(data);
+        document.getElementById("isSaved").style.display = "block";
+        setTimeout(function() {
+          document.getElementById("isSaved").style.display = "none";
+        }, 2000);
+
+      })
+      .catch((error) => {
+        // Handle error if needed
+        console.error("Error:", error);
+      });
+  }
+
+  // Function to populate date and time fields with current values
+  function populateDateTimeFields(start_date, start_time, end_date, end_time) {
+    document.getElementById("start-time").value = start_time;
+    document.getElementById("end-time").value = end_time;
+    document.getElementById("start-day").value = start_date;
+    document.getElementById("end-day").value = end_date;
+  }
+
+
+  function quickStart() {
+    var data = {
+      startTime: "22:00:00",
+      endTime: "06:30:00",
+      startDay: "2024-04-07",
+      endDay: "2024-04-16",
+    };
+
+    // Send AJAX request to Flask endpoint to update Firebase
+    fetch("/update_run", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle success response if needed
+        console.log(data);
+        document.getElementById("isStarted").style.display = "block";
+        setTimeout(function() {
+          document.getElementById("isStarted").style.display = "none";
+        }, 2000);
+
+      })
+      .catch((error) => {
+        // Handle error if needed
+        console.error("Error:", error);
+      });
+  }
+
+
+  function quickStop() {
+    var data = {
+      startTime: "22:00:00",
+      endTime: "06:30:00",
+      startDay: "2024-04-07",
+      endDay: "2024-04-08",
+    };
+
+    // Send AJAX request to Flask endpoint to update Firebase
+    fetch("/update_run", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle success response if needed
+        console.log(data);
+        document.getElementById("isStopped").style.display = "block";
+        setTimeout(function() {
+          document.getElementById("isStopped").style.display = "none";
+        }, 2000);
+
+      })
+      .catch((error) => {
+        // Handle error if needed
+        console.error("Error:", error);
+      });
+  }
+
+
+
+  // Fetch current date and time from the server
+  function fetchCurrentDateTime() {
+    const start_date = "{{ start_date }}";
+    const start_time = "{{ start_time }}";
+    const end_date = "{{ end_date }}";
+    const end_time = "{{ end_time }}";
+
+    // Populate the date and time fields with the current values
+    populateDateTimeFields(start_date, start_time, end_date, end_time);
+
+    isDataFetched = true;
+  }
+
+  // Call the function to fetch and populate current date and time when the page loads
+  fetchCurrentDateTime();
+  document.getElementById("isSaved").style.display = "none";
+  document.getElementById("isStarted").style.display = "none";
+  document.getElementById("isStopped").style.display = "none";
+</script>
+{% endblock %}

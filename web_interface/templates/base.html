@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Default Title{% endblock %}</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<style>
+    :root {
+        --dark1: #151929; /* Darkest, for background */
+        --dark2: #1d2236; /* navbar */
+        --dark3: #1d2236; /* feature box */
+        --dark4: #1e2b45; /* button */
+        --dark5: #273e6b; /* button hover */
+        --bodyText: #cad6de;
+        --headerText: #d3dce8;
+        --titleText: #d3dce8;
+        --whiteSpace: #d5e1e8;
+        --hoverText: #98b2e3; /* darker white */
+        --bodyFont: sans-serif;
+        --titleFont: sans-serif;
+    }
+
+    h1 {
+        font-family: var(--titleFont);
+        color: var(--titleText);
+    }
+    h2 {
+        font-family: var(--titleFont);
+        color: var(--titleText);
+    }
+    h3 {
+        font-family: var(--titleFont);
+        color: var(--headerText);
+        font-size: 22px;
+    }
+
+    .website-background {
+        background-color: var(--dark1);
+        color: var(--bodyText);
+    }
+
+    .navbar {
+        background-color: var(--dark2);
+        font-family: var(--bodyFont);
+    }
+    .navbar:active {color:  var(--hoverText);}
+    .navbar-brand {
+        font-family: var(--titleFont);
+        color: var(--titleText);
+    }
+    .navbar-brand:hover {color:  white;}
+    .nav-link {
+        color: var(--bodyText);
+        font-family: var(--bodyFont);
+    }
+    .nav-link:hover {color:  var(--hoverText);}
+
+
+    .jumbotron {
+        background: black;
+        background: url('https://firebasestorage.googleapis.com/v0/b/amdt-a1b24.appspot.com/o/home_background.jpg?alt=media&token=3e3540a0-c893-4432-be1f-188a49a8a32f');
+        background-size: cover; /* Cover the entire element with the background image */
+        background-position: top;
+        color: var(--titleFont);
+        padding: 100px; /* Adjust padding for better text positioning */
+        min-height: 280px;
+    }
+
+    .feature-box {
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: var(--dark3);
+        border: 1px solid var(--dark3);
+        border-radius: 8px;
+        color: var(--bodyText);
+    }
+
+    .buttonA {
+        background-color: var(--dark4);
+        border: 1px solid var(--whiteSpace);
+        color: var(--bodyText);
+        border-radius: 8px;
+        padding: 8px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        box-shadow: 0 6px #999;
+
+    }
+    .buttonA:hover {background-color:  var(--dark5);}
+    .buttonA:active {
+        background-color: var(--dark5);
+        box-shadow: 0 2px #999;
+        transform: translateY(4px);
+    }
+
+    .buttonB {
+        border: 1px solid var(--whiteSpace);
+        color: var(--bodyText);
+        border-radius: 8px;
+        padding: 8px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        box-shadow: 0 6px #999;
+    }
+
+    .image-card {
+        padding: 4px;
+        margin-bottom: 4px;
+        background-color: var(--dark3);
+        border: 2px solid var(--dark3);
+        border-radius: 8px;
+    }
+
+    .image-card img {
+        aspect-ratio: 1;
+    }
+
+    .page-link {
+        background-color: var(--dark4);
+        border: 1px solid var(--whiteSpace);
+        color: var(--bodyText);
+        cursor: pointer;
+    }
+    .page-link:hover {
+        background-color: var(--dark5);
+        color: var(--bodyText);
+    }
+    .pagination .page-item.active .page-link {
+        background-color: var(--whiteSpace);
+        border: 1px solid var(--whiteSpace);
+        color: var(--dark4);
+        cursor: pointer;
+    }
+    .pagination .page-item.disabled .page-link {
+        background-color: var(--dark4);
+        border: 1px solid var(--whiteSpace);
+    }
+    .form-control {
+        background-color: var(--whiteSpace);
+        border: 1px solid var(--dark5);
+    }
+    .form-control:focus {
+        background-color: var(--whiteSpace);
+        border: 1px solid var(--dark5);
+    }
+
+</style>
+<body class="website-background"> <!-- Update background and text colors -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark" style="navbar"> <!-- Update navbar background color -->
+        <a class="navbar-brand" href="{{ url_for('home') }}"  >AMDT</a> <!-- Update navbar brand color -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}" >Home</a> <!-- Update navbar link color -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('detected_meteors') }}" >Detected Meteors</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('all_images') }}" >All Images</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('configure') }}" >Configure</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Include Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
