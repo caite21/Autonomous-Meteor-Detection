@@ -1,9 +1,16 @@
-# AutoMeteorTracker
+# Autonomous Meteor Detection
 
 ### Summary
+
 This project is an autonomous meteor detection and tracking system for hobbyist and research applications. Our client's primary goal was to track meteor trajectories to facilitate the collection of meteorites for research.
 
+
+
 The system proposed is an open-source, cost-effective, accessible, and modular system for autonomously detecting meteors, built using readily available commercial-off-the-shelf components. A fully functional prototype was designed, developed, and tested. The prototype design utilized a digital single-lens reflex camera connected to a single-board computer, controlled remotely via a web interface; a local machine learning model running on the single-board computer was deployed to detect meteor occurrences in captured images. A weatherproof housing was constructed to contain the system. Night tests were conducted to confirm the system's effectiveness. The prototype successfully captured images and supported remote system control through the web interface. Although no meteors were successfully captured, simulations revealed that the classification algorithm achieved a minimum of 85% accuracy.
+
+
+Computer Engineering Capstone Project by Ben Paulson, Caite Sklar, Alex Zeng, and Sagi Kusmanov.
+
 
 ### Presentation Poster
 [AMDT_Poster.pdf](https://github.com/user-attachments/files/16999669/ECE492_AMDT2_Poster_V02.pdf)
