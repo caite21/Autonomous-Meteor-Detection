@@ -1,9 +1,9 @@
 # Autonomous Meteor Detection
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/39b19f3d-45b6-40fb-8809-7e801bc29ab3" alt="left_star" width="26%"/>
-  <img src="https://github.com/user-attachments/assets/75a4ca70-aa70-4f48-8d00-9bebee709458" alt="AMDT_daytime" width="47%"/>
-  <img src="https://github.com/user-attachments/assets/8a4e6e3c-ba96-4c75-84b7-f16403438d7f" alt="right_star" width="26%"/>
+  <img src="https://github.com/user-attachments/assets/39b19f3d-45b6-40fb-8809-7e801bc29ab3" alt="left_star" width="25%"/>
+  <img src="https://github.com/user-attachments/assets/75a4ca70-aa70-4f48-8d00-9bebee709458" alt="AMDT_daytime" width="48%"/>
+  <img src="https://github.com/user-attachments/assets/8a4e6e3c-ba96-4c75-84b7-f16403438d7f" alt="right_star" width="25%"/>
 </p>
 
 ## Summary
